@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import Logo from '@/assets/Logo';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCalendar,
+  faEye,
+  faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { format } from 'date-fns';
 
@@ -54,6 +58,8 @@ const SignUpForm = () => {
     control,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
@@ -210,25 +216,40 @@ const SignUpForm = () => {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password*</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                {...register('password', {
-                  required: 'Password is required',
-                  validate: {
-                    minLength: (v) =>
-                      v.length >= 8 || 'Must be at least 8 characters',
-                    hasUpper: (v) =>
-                      /[A-Z]/.test(v) || 'Must contain an uppercase letter',
-                    hasLower: (v) =>
-                      /[a-z]/.test(v) || 'Must contain a lowercase letter',
-                    hasNumber: (v) => /\d/.test(v) || 'Must contain a number',
-                    hasSpecial: (v) =>
-                      /[\W_]/.test(v) || 'Must contain a special character',
-                  },
-                })}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  {...register('password', {
+                    required: 'Password is required',
+                    validate: {
+                      minLength: (v) =>
+                        v.length >= 8 || 'Must be at least 8 characters',
+                      hasUpper: (v) =>
+                        /[A-Z]/.test(v) || 'Must contain an uppercase letter',
+                      hasLower: (v) =>
+                        /[a-z]/.test(v) || 'Must contain a lowercase letter',
+                      hasNumber: (v) => /\d/.test(v) || 'Must contain a number',
+                      hasSpecial: (v) =>
+                        /[\W_]/.test(v) || 'Must contain a special character',
+                    },
+                  })}
+                  className="pr-[42px]"
+                />
+                <Button
+                  variant="ghost"
+                  aria-label={`Password is ${showPassword ? 'Visible' : 'Hidden'}. Click to toggle password visibility`}
+                  className="absolute right-0"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Toggle password visibility
+                    setShowPassword((prev) => !prev);
+                  }}
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                </Button>
+              </div>
               <FieldError errors={[errors.password]} />
             </Field>
             <Input
