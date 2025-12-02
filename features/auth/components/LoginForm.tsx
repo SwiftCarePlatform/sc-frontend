@@ -66,7 +66,7 @@ const LoginForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
         <FieldSet>
           <FieldLegend className="sr-only">User information</FieldLegend>
           <FieldDescription className="sr-only">
@@ -118,7 +118,7 @@ const LoginForm = () => {
           </FieldGroup>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Input id="rember-me" type="checkbox" className="size-4" />
+              <Input id="remember-me" type="checkbox" className="size-4" />
               <Label htmlFor="remember-me" className="text-black-400">
                 Remember me
               </Label>

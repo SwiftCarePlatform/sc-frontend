@@ -81,7 +81,7 @@ const SignUpForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
         <FieldSet>
           <FieldLegend className="sr-only">User information</FieldLegend>
           <FieldDescription className="sr-only">
