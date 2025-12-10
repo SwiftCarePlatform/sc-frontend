@@ -21,11 +21,6 @@ const eslintConfig = defineConfig([
     rules: {
       // --- Formatting & Style ---
       semi: 'error',
-      'arrow-body-style': [
-        'error',
-        'as-needed',
-        { requireReturnForObjectLiteral: true },
-      ],
       curly: 'error',
 
       // --- Best Practices ---

@@ -3,6 +3,9 @@ import { Inter } from 'next/font/google';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
+import QueryProvider from '@/components/providers/QueryProvider';
+import { Toaster } from '@/components/ui/sonner';
+
 import './globals.css';
 
 const inter = Inter({
@@ -20,9 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>{children}</body>
-      <SpeedInsights />
-    </html>
+    <QueryProvider>
+      <html lang="en">
+        <body className={`${inter.variable} antialiased`}>
+          {children}
+          <Toaster position="bottom-center" />
+        </body>
+        <SpeedInsights />
+      </html>
+    </QueryProvider>
   );
 }

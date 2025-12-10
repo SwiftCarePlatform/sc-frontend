@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+
+import { useRouter } from 'next/navigation';
 
 import Logo from '@/assets/Logo';
 import {
@@ -10,21 +12,20 @@ import {
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { UseMutateFunction } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
@@ -39,6 +40,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
+
+import { ApiResponse } from '@/types/api';
+
+import { SignUpInputs, SignUpResponse } from '../types/auth.types';
 
 type Inputs = {
   f_name: string;
@@ -51,20 +57,41 @@ type Inputs = {
   password: string;
 };
 
-const SignUpForm = () => {
+const SignUpForm = ({
+  signUpMutation,
+  isPending,
+}: {
+  signUpMutation: UseMutateFunction<
+    ApiResponse<SignUpResponse>,
+    Error,
+    SignUpInputs,
+    unknown
+  >;
+  isPending: boolean;
+}) => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const router = useRouter();
 
-  const onError = (errors: any) => {
-    console.log('Validation Errors:', errors);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    signUpMutation(data, {
+      onSuccess(data) {
+        toast.success(data.message, { style: { color: 'green' } });
+        reset();
+        router.push('/login');
+      },
+      onError(error) {
+        toast.error(error.message, { style: { color: 'red' } });
+      },
+    });
   };
 
   return (
@@ -81,7 +108,7 @@ const SignUpForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <FieldSet>
           <FieldLegend className="sr-only">User information</FieldLegend>
           <FieldDescription className="sr-only">
@@ -161,7 +188,7 @@ const SignUpForm = () => {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange} // Connects calendar select to form
-                          disabled={(date) =>
+                          disabled={(date: Date) =>
                             date > new Date() || date < new Date('1900-01-01')
                           }
                           captionLayout="dropdown"
@@ -224,14 +251,15 @@ const SignUpForm = () => {
                   {...register('password', {
                     required: 'Password is required',
                     validate: {
-                      minLength: (v) =>
+                      minLength: (v: string) =>
                         v.length >= 8 || 'Must be at least 8 characters',
-                      hasUpper: (v) =>
+                      hasUpper: (v: string) =>
                         /[A-Z]/.test(v) || 'Must contain an uppercase letter',
-                      hasLower: (v) =>
+                      hasLower: (v: string) =>
                         /[a-z]/.test(v) || 'Must contain a lowercase letter',
-                      hasNumber: (v) => /\d/.test(v) || 'Must contain a number',
-                      hasSpecial: (v) =>
+                      hasNumber: (v: string) =>
+                        /\d/.test(v) || 'Must contain a number',
+                      hasSpecial: (v: string) =>
                         /[\W_]/.test(v) || 'Must contain a special character',
                     },
                   })}
@@ -259,7 +287,18 @@ const SignUpForm = () => {
             />
           </FieldGroup>
         </FieldSet>
-        <Button className="bg-primary-500 mt-6 w-full">Sign up</Button>
+        <Button
+          disabled={isPending}
+          className="bg-primary-500 mt-6 w-full disabled:cursor-not-allowed"
+        >
+          {isPending ? (
+            <>
+              <Spinner /> Signing up
+            </>
+          ) : (
+            'Sign up'
+          )}
+        </Button>
       </form>
     </div>
   );
