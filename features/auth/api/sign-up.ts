@@ -10,9 +10,11 @@ export const signUp = async (userData: SignUpInputs) => {
     ...userData,
     dob: formatISO(userData.dob),
   };
+
   const { data } = await apiClient.post<ApiResponse<SignUpResponse>>(
     '/user/signup',
     reqBody,
   );
+
   return data;
 };
