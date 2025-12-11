@@ -10,7 +10,7 @@ export default function Home() {
         <Link href="/login">login</Link>
       </div>
       <div>
-        <Link href="/forgot-password">login</Link>
+        <Link href="/forgot-password">forgot</Link>
       </div>
     </div>
   );

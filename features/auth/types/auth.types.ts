@@ -39,3 +39,12 @@ export type User = {
   created_at: Date;
   updated_at: Date;
 };
+
+export type ForgotPasswordInputs = {
+  email: string;
+};
+
+export type ForgotPasswordResponse = {
+  message: string;
+  reset_link: string;
+};

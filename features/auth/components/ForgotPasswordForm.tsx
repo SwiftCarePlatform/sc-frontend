@@ -1,56 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-
-import Link from 'next/link';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Logo from '@/assets/Logo';
-import {
-  faCalendar,
-  faEye,
-  faEyeSlash,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { format } from 'date-fns';
+import { UseMutateFunction } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
-  FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
-type Inputs = {
-  email: string;
-};
+import { ApiResponse } from '@/types/api';
 
-const LoginForm = () => {
+import {
+  ForgotPasswordInputs,
+  ForgotPasswordResponse,
+} from '../types/auth.types';
+
+const ForgotPasswordForm = ({
+  forgotPasswordMutation,
+  isPending,
+}: {
+  forgotPasswordMutation: UseMutateFunction<
+    ApiResponse<ForgotPasswordResponse>,
+    Error,
+    ForgotPasswordInputs,
+    unknown
+  >;
+  isPending: boolean;
+}) => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
-  } = useForm<Inputs>();
+    reset,
+  } = useForm<ForgotPasswordInputs>();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
-  const onError = (errors: any) => {
-    console.log('Validation Errors:', errors);
+  const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
+    forgotPasswordMutation(data, {
+      onSuccess(data) {
+        toast.success(data.message, { style: { color: 'green' } });
+        reset();
+      },
+      onError(error) {
+        toast.error(error.message, { style: { color: 'red' } });
+      },
+    });
   };
-
   return (
     <div className="bg-white-50 space-y-6 rounded-md p-4">
       <div className="space-y-2">
@@ -63,7 +67,7 @@ const LoginForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <FieldSet>
           <FieldLegend className="sr-only">User information</FieldLegend>
           <FieldDescription className="sr-only">
@@ -86,10 +90,21 @@ const LoginForm = () => {
             <FieldError errors={[errors.email]} />
           </Field>
         </FieldSet>
-        <Button className="bg-primary-500 mt-6 w-full">Reset password</Button>
+        <Button
+          disabled={isPending}
+          className="bg-primary-500 mt-6 w-full disabled:cursor-not-allowed"
+        >
+          {isPending ? (
+            <>
+              <Spinner /> Please wait
+            </>
+          ) : (
+            'Reset password'
+          )}
+        </Button>
       </form>
     </div>
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

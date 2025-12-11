@@ -1,13 +1,17 @@
-import React from 'react';
-
-import Link from 'next/link';
+'use client';
 
 import ForgotPasswordForm from '@/features/auth/components/ForgotPasswordForm';
+import useForgotPasswordMutation from '@/features/auth/queries/useForgotPasswordMutation';
 
 function ForgotPasswordPage() {
+  const { mutate, isPending } = useForgotPasswordMutation();
+
   return (
     <div>
-      <ForgotPasswordForm />
+      <ForgotPasswordForm
+        forgotPasswordMutation={mutate}
+        isPending={isPending}
+      />
     </div>
   );
 }
