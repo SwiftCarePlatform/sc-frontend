@@ -20,7 +20,7 @@ const eslintConfig = defineConfig([
     },
     rules: {
       // --- Formatting & Style ---
-      semi: 'error',
+      // semi: 'error',
       curly: 'error',
 
       // --- Best Practices ---

@@ -1,11 +1,11 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 import Link from 'next/link';
 
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+function AuthLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#EDF8FF] p-4">
