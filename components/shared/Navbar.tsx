@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Link from 'next/link';
 
 import Logo from '@/assets/Logo';
@@ -16,12 +14,10 @@ const navItems = [
 
 const Navbar = () => {
   return (
-    <header className="flex items-center p-4">
+    <header className="fixed top-0 left-0 z-50 flex h-[70px] w-full items-center bg-white px-8">
       {/* Logo */}
       <div>
-        <Link href="/">
-          <Logo showLabel={true} />
-        </Link>
+        <Logo showLabel={true} />
       </div>
 
       <div className="ml-auto flex items-center gap-8">
@@ -30,7 +26,9 @@ const Navbar = () => {
           <ul className="flex items-center gap-4">
             {navItems.map(([name, path]) => (
               <li key={path}>
-                <Link href={path}>{name}</Link>
+                <Link href={path} className="text-black-300">
+                  {name}
+                </Link>
               </li>
             ))}
           </ul>

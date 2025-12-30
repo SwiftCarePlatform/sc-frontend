@@ -29,7 +29,7 @@ const eslintConfig = defineConfig([
       eqeqeq: 'error',
       'no-duplicate-imports': 'warn',
       'require-await': 'error',
-      'no-useless-return': 'warn',
+      // 'no-useless-return': 'warn',
 
       // --- Handling the API / TypeScript ---
       camelcase: ['error', { properties: 'never' }],

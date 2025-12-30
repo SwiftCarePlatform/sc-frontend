@@ -1,17 +1,12 @@
-import Link from 'next/link';
+import { Hero, HowSwiftcareWorks } from '@/components/marketing/home';
+import WhatWeProvide from '@/components/marketing/home/WhatWeProvide';
 
 export default function Home() {
   return (
-    <div>
-      <div>
-        <Link href="/sign-up">register</Link>
-      </div>
-      <div>
-        <Link href="/login">login</Link>
-      </div>
-      <div>
-        <Link href="/forgot-password">forgot</Link>
-      </div>
-    </div>
+    <>
+      <Hero />
+      <HowSwiftcareWorks />
+      <WhatWeProvide />
+    </>
   );
 }
